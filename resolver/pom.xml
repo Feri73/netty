@@ -28,10 +28,6 @@
 
   <name>Netty/Resolver</name>
 
-  <properties>
-    <javaModuleName>io.netty.resolver</javaModuleName>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -41,6 +37,10 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
     </dependency>
   </dependencies>
 </project>

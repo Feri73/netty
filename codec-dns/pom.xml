@@ -28,10 +28,6 @@
 
   <name>Netty/Codec/DNS</name>
 
-  <properties>
-    <javaModuleName>io.netty.codec.dns</javaModuleName>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -40,10 +36,14 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.directory.server</groupId>
-      <artifactId>apacheds-protocol-dns</artifactId>
-      <scope>test</scope>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-apacheds</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
+    </dependency>
+
   </dependencies>
 </project>
 

@@ -83,8 +83,8 @@
         <!-- 1.4.x does not work in Java10+ -->
         <jboss.marshalling.version>2.0.5.Final</jboss.marshalling.version>
         <!-- This is the minimum supported by Java12 -->
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
       </properties>
     </profile>
 
@@ -126,9 +126,6 @@
     <profile>
       <id>java9</id>
       <properties>
-        <argLine.java9.extras />
-        <!-- Export some stuff which is used during our tests -->
-        <argLine.java9>--add-modules java.xml.bind ${argLine.java9.extras}</argLine.java9>
         <!-- Not use alpn agent as Java9 supports alpn out of the box -->
         <argLine.alpnAgent />
         <!-- Skip as maven plugin not works with Java9 yet --> 
@@ -222,8 +219,8 @@
   </profiles>
 
   <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.9</maven.compiler.source>
+    <maven.compiler.target>1.9</maven.compiler.target>
     <netty.dev.tools.directory>${project.build.directory}/dev-tools</netty.dev.tools.directory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -231,6 +228,7 @@
     <jboss.marshalling.version>1.4.11.Final</jboss.marshalling.version>
     <jetty.alpnAgent.version>2.0.8</jetty.alpnAgent.version>
     <jetty.alpnAgent.path>"${settings.localRepository}"/org/mortbay/jetty/alpn/jetty-alpn-agent/${jetty.alpnAgent.version}/jetty-alpn-agent-${jetty.alpnAgent.version}.jar</jetty.alpnAgent.path>
+    <argLine.compileAndTest/>
     <argLine.common>
       -server
       -dsa -da -ea:io.netty...
@@ -242,7 +240,6 @@
     <argLine.noUnsafe>-D_</argLine.noUnsafe> <!-- Overridden when 'noUnsafe' profile is active -->
     <argLine.coverage>-D_</argLine.coverage> <!-- Overridden when 'coverage' profile is active -->
     <argLine.printGC>-XX:+PrintGCDetails</argLine.printGC>
-    <argLine.java9 /> <!-- Overridden when 'java9' profile is active -->
     <argLine.javaProperties>-D_</argLine.javaProperties>
     <!-- Configure the os-maven-plugin extension to expand the classifier on                  -->
     <!-- Fedora-"like" systems. This is currently only used for the netty-tcnative dependency -->
@@ -303,6 +300,8 @@
     <module>testsuite-shading</module>
     <module>microbench</module>
     <module>bom</module>
+    <module>dependencies-hamcrest</module>
+    <module>depenencies-apacheds</module>
   </modules>
 
   <dependencyManagement>
@@ -514,6 +513,12 @@
         <artifactId>junit</artifactId>
         <version>4.12</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -522,10 +527,16 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-library</artifactId>
-        <version>1.3</version>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-dependencies-hamcrest</artifactId>
+        <version>${project.version}</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
@@ -587,10 +598,16 @@
 
       <!-- Test dependency for resolver-dns -->
       <dependency>
-        <groupId>org.apache.directory.server</groupId>
-        <artifactId>apacheds-protocol-dns</artifactId>
-        <version>1.5.7</version>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-dependencies-apacheds</artifactId>
+        <version>${project.version}</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Test dependency for log4j2 tests -->
@@ -620,11 +637,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>netty-build</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -688,6 +700,7 @@
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <compilerArgument>-Xlint:-options</compilerArgument>
+          <compilerArgument>${argLine.compileAndTest}</compilerArgument>
           <!-- XXX: maven-release-plugin complains - MRELEASE-715 -->
           <!--
           <compilerArguments>
@@ -704,107 +717,11 @@
         </configuration>
       </plugin>
       <plugin>
-        <!-- ensure that only methods available in java 1.6 can
-             be used even when compiling with java 1.7+ -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.16</version>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java16</artifactId>
-            <version>1.1</version>
-          </signature>
-          <ignores>
-            <ignore>sun.misc.Unsafe</ignore>
-            <ignore>sun.misc.Cleaner</ignore>
-            <ignore>sun.nio.ch.DirectBuffer</ignore>
-
-            <ignore>java.util.zip.Deflater</ignore>
-
-            <!-- Used for NIO -->
-            <ignore>java.nio.channels.DatagramChannel</ignore>
-            <ignore>java.nio.channels.MembershipKey</ignore>
-            <ignore>java.nio.channels.ServerSocketChannel</ignore>
-            <ignore>java.nio.channels.SocketChannel</ignore>
-            <ignore>java.net.StandardProtocolFamily</ignore>
-            <ignore>java.nio.channels.spi.SelectorProvider</ignore>
-            <ignore>java.net.SocketOption</ignore> 
-            <ignore>java.net.StandardSocketOptions</ignore> 
-            <ignore>java.nio.channels.NetworkChannel</ignore>
-
-            <!-- Self-signed certificate generation -->
-            <ignore>sun.security.x509.AlgorithmId</ignore>
-            <ignore>sun.security.x509.CertificateAlgorithmId</ignore>
-            <ignore>sun.security.x509.CertificateIssuerName</ignore>
-            <ignore>sun.security.x509.CertificateSerialNumber</ignore>
-            <ignore>sun.security.x509.CertificateSubjectName</ignore>
-            <ignore>sun.security.x509.CertificateValidity</ignore>
-            <ignore>sun.security.x509.CertificateVersion</ignore>
-            <ignore>sun.security.x509.CertificateX509Key</ignore>
-            <ignore>sun.security.x509.X500Name</ignore>
-            <ignore>sun.security.x509.X509CertInfo</ignore>
-            <ignore>sun.security.x509.X509CertImpl</ignore>
-
-            <!-- SSLSession implementation -->
-            <ignore>javax.net.ssl.SSLEngine</ignore>
-            <ignore>javax.net.ssl.ExtendedSSLSession</ignore>
-            <ignore>javax.net.ssl.X509ExtendedTrustManager</ignore>
-            <ignore>javax.net.ssl.SSLParameters</ignore>
-            <ignore>javax.net.ssl.SNIServerName</ignore>
-            <ignore>javax.net.ssl.SNIHostName</ignore>
-            <ignore>javax.net.ssl.SNIMatcher</ignore>
-            <ignore>java.security.AlgorithmConstraints</ignore>
-            <ignore>java.security.cert.CertificateRevokedException</ignore>
-            <ignore>java.security.cert.CertPathValidatorException</ignore>
-            <ignore>java.security.cert.CertPathValidatorException$Reason</ignore>
-            <ignore>java.security.cert.CertPathValidatorException$BasicReason</ignore>
-
-            <ignore>java.util.concurrent.ConcurrentLinkedDeque</ignore>
-            <ignore>java.util.concurrent.ThreadLocalRandom</ignore>
-
-            <!-- Compression -->
-            <ignore>java.util.zip.CRC32</ignore>
-            <ignore>java.util.zip.Adler32</ignore>
-
-            <!-- NioDatagramChannel implementation -->
-            <ignore>java.net.ProtocolFamily</ignore>
-
-            <!-- JDK 9 -->
-            <ignore>java.nio.ByteBuffer</ignore>
-            <ignore>java.nio.CharBuffer</ignore>
-
-            <!-- JDK 8 -->
-            <ignore>java.util.concurrent.atomic.LongAdder</ignore>
-            <ignore>java.util.function.BiFunction</ignore>
-            <ignore>java.security.cert.X509Certificate</ignore>
-
-            <!-- Resolver -->
-            <ignore>java.net.InetAddress</ignore>
-
-            <!-- NoexecVolumeDetector -->
-            <ignore>java.nio.file.attribute.PosixFilePermission</ignore>
-            <ignore>java.nio.file.Files</ignore>
-            <ignore>java.nio.file.LinkOption</ignore>
-            <ignore>java.nio.file.Path</ignore>
-            <ignore>java.io.File</ignore>
-          </ignores>
-          <annotations>
-            <annotation>io.netty.util.internal.SuppressJava6Requirement</annotation>
-          </annotations>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>2.12.1</version>
+        <configuration>
+          <excludes>**/module-info.java</excludes>
+        </configuration>
         <executions>
           <execution>
             <id>check-style</id>
@@ -817,7 +734,7 @@
               <logViolationsToConsole>true</logViolationsToConsole>
               <failsOnError>true</failsOnError>
               <failOnViolation>true</failOnViolation>
-              <configLocation>io/netty/checkstyle.xml</configLocation>
+              <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
             </configuration>
           </execution>
@@ -889,7 +806,7 @@
             <logback.configurationFile>${logging.config}</logback.configurationFile>
             <logLevel>${logging.logLevel}</logLevel>
           </systemPropertyVariables>
-          <argLine>${argLine.common} ${argLine.printGC} ${argLine.alpnAgent} ${argLine.leak} ${argLine.coverage} ${argLine.noUnsafe} ${argLine.java9} ${argLine.javaProperties}</argLine>
+          <argLine>${argLine.common} ${argLine.printGC} ${argLine.alpnAgent} ${argLine.leak} ${argLine.coverage} ${argLine.noUnsafe} ${argLine.javaProperties} ${argLine.compileAndTest}</argLine>
           <properties>
             <property>
               <name>listener</name>
@@ -928,6 +845,13 @@
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>biz.aQute.bnd</groupId>
+            <artifactId>biz.aQute.bndlib</artifactId>
+            <version>3.5.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
@@ -1177,9 +1101,6 @@
                   <manifest>
                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                   </manifest>
-                  <manifestEntries>
-                    <Automatic-Module-Name>${javaModuleName}</Automatic-Module-Name>
-                  </manifestEntries>
                   <index>true</index>
                   <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                 </archive>

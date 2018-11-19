@@ -29,10 +29,6 @@
 
   <name>Netty/Transport/UDT</name>
 
-  <properties>
-    <javaModuleName>io.netty.transport.udt</javaModuleName>
-  </properties>
-
   <dependencies>
 
     <!-- MAIN -->
@@ -68,19 +64,10 @@
       <artifactId>caliper</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
+    </dependency>
 
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- run each test in separate JVM -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <forkMode>always</forkMode>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

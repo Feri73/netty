@@ -29,10 +29,6 @@
 
   <name>Netty/Transport/RXTX</name>
 
-  <properties>
-    <javaModuleName>io.netty.transport.rxtx</javaModuleName>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

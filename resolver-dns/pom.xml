@@ -28,10 +28,6 @@
 
   <name>Netty/Resolver/DNS</name>
 
-  <properties>
-    <javaModuleName>io.netty.resolver.dns</javaModuleName>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -49,8 +45,8 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.directory.server</groupId>
-      <artifactId>apacheds-protocol-dns</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-apacheds</artifactId>
       <scope>test</scope>
       <exclusions>
         <!--
@@ -68,6 +64,16 @@
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.mina</groupId>
+      <artifactId>mina-core</artifactId>
+      <version>2.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
     </dependency>
   </dependencies>
 </project>

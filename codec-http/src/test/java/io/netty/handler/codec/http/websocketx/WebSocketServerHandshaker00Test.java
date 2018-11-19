@@ -70,7 +70,7 @@ public class WebSocketServerHandshaker00Test {
         }
 
         EmbeddedChannel ch2 = new EmbeddedChannel(new HttpResponseDecoder());
-        ch2.writeInbound(ch.readOutbound());
+        ch2.writeInbound((Object) ch.readOutbound());
         HttpResponse res = ch2.readInbound();
 
         Assert.assertEquals("ws://example.com/chat", res.headers().get(HttpHeaderNames.SEC_WEBSOCKET_LOCATION));

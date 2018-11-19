@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>netty-parent</artifactId>
+    <groupId>io.netty</groupId>
+    <version>4.1.32.Final-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>netty-dependencies-apacheds</artifactId>
+
+  <name>Netty/Dependencies/Apacheds</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.directory.server</groupId>
+      <artifactId>apacheds-protocol-dns</artifactId>
+      <version>1.5.7</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>trigger-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <excludes>
+                  <exclude>bouncycastle:bcprov-jdk15</exclude>
+                  <exclude>org.apache.mina:mina-core</exclude>
+                  <exclude>commons-lang:commons-lang</exclude>
+                  <exclude>commons-collections:commons-collections</exclude>
+                  <exclude>org.apache.directory.shared:*</exclude>
+                  <exclude>dom4j:dom4j</exclude>
+                  <exclude>xml-apis:xml-apis</exclude>
+                  <exclude>xpp3:xpp3</exclude>
+                  <exclude>org.slf4j:slf4j-api</exclude>
+                  <exclude>antlr:antlr</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

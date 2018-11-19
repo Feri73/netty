@@ -1,7 +1,7 @@
 /*
- * Copyright 2012 The Netty Project
+ * Copyright 2018 The Netty-JPMS Project
  *
- * The Netty Project licenses this file to you under the Apache License,
+ * The Netty-JPMS Project licenses this file to you under the Apache License,
  * version 2.0 (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at:
  *
@@ -13,8 +13,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+package io.netty.handler.internal;
 
-/**
- * Xml specific codecs.
- */
-package io.netty.handler.codec.xml;
+import io.netty.buffer.ByteBuf;
+
+public interface MessageReceiver {
+    void messageReceived(ByteBuf msg);
+}

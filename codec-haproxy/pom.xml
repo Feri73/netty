@@ -28,15 +28,16 @@
 
   <name>Netty/Codec/HAProxy</name>
 
-  <properties>
-    <javaModuleName>io.netty.codec.haproxy</javaModuleName>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>netty-codec</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
     </dependency>
   </dependencies>
 </project>

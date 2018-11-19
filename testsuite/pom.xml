@@ -70,8 +70,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -88,7 +88,7 @@
 
   <properties>
     <!-- Needed for SSL tests as these use the SelfSignedCertificate --> 
-    <argLine.java9.extras>--add-exports java.base/sun.security.x509=ALL-UNNAMED</argLine.java9.extras>
+    <argLine.compileAndTest>--add-exports=java.base/sun.security.x509=io.netty.handler</argLine.compileAndTest>
   </properties>
 
   <build>

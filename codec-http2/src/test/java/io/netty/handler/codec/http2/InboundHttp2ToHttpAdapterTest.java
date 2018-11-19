@@ -43,6 +43,8 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http2.Http2TestUtil.Http2Runnable;
+import io.netty.handler.codec.http2.internal.HttpResponseListener;
+import io.netty.handler.codec.http2.internal.HttpSettingsListener;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.Future;
@@ -794,14 +796,6 @@ public class InboundHttp2ToHttpAdapterTest {
 
     private ChannelPromise newPromiseServer() {
         return ctxServer().newPromise();
-    }
-
-    private interface HttpResponseListener {
-        void messageReceived(HttpObject obj);
-    }
-
-    private interface HttpSettingsListener {
-        void messageReceived(Http2Settings settings);
     }
 
     private static final class HttpResponseDelegator extends SimpleChannelInboundHandler<HttpObject> {

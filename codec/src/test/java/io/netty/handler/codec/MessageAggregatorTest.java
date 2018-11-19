@@ -16,6 +16,7 @@
 
 package io.netty.handler.codec;
 
+import io.netty.handler.codec.internal.MockMessageAggregator;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,19 +39,6 @@ public class MessageAggregatorTest {
         public void read(ChannelHandlerContext ctx) throws Exception {
             value++;
             ctx.read();
-        }
-    }
-
-    abstract static class MockMessageAggregator
-        extends MessageAggregator<ByteBufHolder, ByteBufHolder, ByteBufHolder, ByteBufHolder> {
-
-        protected MockMessageAggregator() {
-            super(1024);
-        }
-
-        @Override
-        protected ByteBufHolder beginAggregation(ByteBufHolder start, ByteBuf content) throws Exception {
-            return start.replace(content);
         }
     }
 

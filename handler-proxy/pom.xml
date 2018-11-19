@@ -27,9 +27,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <javaModuleName>io.netty.handler.proxy</javaModuleName>
     <!-- Needed for SelfSignedCertificate -->
-    <argLine.java9.extras>--add-exports java.base/sun.security.x509=ALL-UNNAMED</argLine.java9.extras>
+    <argLine.compileAndTest>--add-exports=java.base/sun.security.x509=io.netty.handler</argLine.compileAndTest>
   </properties>
 
   <name>Netty/Handler/Proxy</name>
@@ -54,11 +53,14 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>netty-handler</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
     </dependency>
   </dependencies>
 </project>

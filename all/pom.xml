@@ -664,24 +664,9 @@
                 <manifest>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                 </manifest>
-                <manifestEntries>
-                  <Automatic-Module-Name>io.netty.all</Automatic-Module-Name>
-                </manifestEntries>
                 <index>true</index>
               </archive>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Disable animal sniffer -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>default</id>
-            <phase>none</phase>
           </execution>
         </executions>
       </plugin>

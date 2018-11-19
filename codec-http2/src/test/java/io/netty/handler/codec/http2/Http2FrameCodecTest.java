@@ -35,6 +35,7 @@ import io.netty.handler.codec.http.HttpServerUpgradeHandler.UpgradeEvent;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http2.Http2Exception.StreamException;
 import io.netty.handler.codec.http2.Http2Stream.State;
+import io.netty.handler.codec.http2.internal.VerifiableHttp2FrameWriter;
 import io.netty.handler.logging.LogLevel;
 import io.netty.util.AbstractReferenceCounted;
 import io.netty.util.AsciiString;
@@ -802,14 +803,5 @@ public class Http2FrameCodecTest {
 
     private static ByteBuf bb(String s) {
         return ByteBufUtil.writeUtf8(UnpooledByteBufAllocator.DEFAULT, s);
-    }
-
-    private static class VerifiableHttp2FrameWriter extends DefaultHttp2FrameWriter {
-        @Override
-        public ChannelFuture writeData(ChannelHandlerContext ctx, int streamId, ByteBuf data,
-                                       int padding, boolean endStream, ChannelPromise promise) {
-            // duplicate 'data' to prevent readerIndex from being changed, to ease verification
-            return super.writeData(ctx, streamId, data.duplicate(), padding, endStream, promise);
-        }
     }
 }

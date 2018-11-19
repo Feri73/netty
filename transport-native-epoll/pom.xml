@@ -27,9 +27,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <javaModuleName>io.netty.transport.epoll</javaModuleName>
     <!-- Needed by the native transport as we need the memoryAddress of the ByteBuffer -->
-    <argLine.java9.extras>--add-exports java.base/sun.security.x509=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED</argLine.java9.extras>
+    <argLine.compileAndTest>--add-exports=java.base/sun.security.x509=io.netty.handler</argLine.compileAndTest>
     <unix.common.lib.name>netty-unix-common</unix.common.lib.name>
     <unix.common.lib.dir>${project.build.directory}/unix-common-lib</unix.common.lib.dir>
     <unix.common.lib.unpacked.dir>${unix.common.lib.dir}/META-INF/native/lib</unix.common.lib.unpacked.dir>
@@ -181,7 +180,6 @@
                     </manifest>
                     <manifestEntries>
                       <Bundle-NativeCode>META-INF/native/libnetty_transport_native_epoll_${os.detected.arch}.so; osname=Linux; processor=${os.detected.arch},*</Bundle-NativeCode>
-                      <Automatic-Module-Name>${javaModuleName}</Automatic-Module-Name>
                     </manifestEntries>
                     <index>true</index>
                     <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>

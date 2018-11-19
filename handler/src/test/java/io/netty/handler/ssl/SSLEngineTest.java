@@ -36,6 +36,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.ApplicationProtocolConfig.Protocol;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import io.netty.handler.internal.MessageReceiver;
 import io.netty.util.CharsetUtil;
 import io.netty.util.NetUtil;
 import io.netty.util.ReferenceCountUtil;
@@ -189,10 +190,6 @@ public abstract class SSLEngineTest {
     protected Channel clientChannel;
     protected CountDownLatch serverLatch;
     protected CountDownLatch clientLatch;
-
-    interface MessageReceiver {
-        void messageReceived(ByteBuf msg);
-    }
 
     protected static final class MessageDelegatorChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
         private final MessageReceiver receiver;

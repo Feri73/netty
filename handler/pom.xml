@@ -27,9 +27,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <javaModuleName>io.netty.handler</javaModuleName>
     <!-- Needed for SelfSignedCertificate -->
-    <argLine.java9.extras>--add-exports java.base/sun.security.x509=ALL-UNNAMED</argLine.java9.extras>
+    <argLine.compileAndTest>--add-exports=java.base/sun.security.x509=io.netty.handler</argLine.compileAndTest>
   </properties>
 
   <name>Netty/Handler</name>
@@ -80,6 +79,10 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>netty-dependencies-hamcrest</artifactId>
     </dependency>
   </dependencies>
 </project>
